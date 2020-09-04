@@ -77,13 +77,20 @@ def main():
             if dados[i]['name'] == consultaNome:
                 if dados[i]['password'] == consultaSenha:
                     if dados[i]['categoryUser'] == 'paciente':
-                        option = 8
+                        print('\nSeja Bem vindo {}'.format(consultaNome))
+                        if dados[i]['exam'] == 'Sem resultados de exames':
+                            print('Mensagem: {}'.format(dados[i]['exam']))
+                            print('em breve voce podera fazer nova consulta\n')
+                            option = 2
+                        else:
+                            print('Mensagem: {}\n'.format(dados[i]['exam']))
+                            print('O resultado eh: {}'.format(dados[i]['description']))
+                            print('Obrigado por usar o sistema!')
+                            option = 2    
                     elif dados[i]['categoryUser'] == 'medico':
                         option = 9
             else:
                 i+=1
-        
-
     
     if option == 4:
         request = requests.get('http://localhost:8000/scheduling/')
@@ -102,6 +109,7 @@ def main():
 
     if option == 8:
         print('Ola paciente\n')
+        print('Queres saber\n')
     
     if option == 9:
         print('Ola medico\n')
