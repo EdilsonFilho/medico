@@ -5,49 +5,17 @@ import getpass
 
 
 print('########################################')
-print('#   PAINEL DE CONTROLE PARA O MEDICO   #')
-print('#    VISAO GERAL SISTEMA COVID         #')
 print('# -----------------------------------  #')
-print('#                                      #')
+print('#       PAINEL DE CONTROLE GERAL       #')
+print('#      VISAO GERAL SISTEMA COVID       #')
+print('# -----------------------------------  #')
 print('########################################')
 
 def main():
 
-    option = int(input('Ola medico, o que desejas fazer?\n 1.Listar completa dos pacientes\n 2.Sair\n 3.consultar resultado por CPF\n 4.Cadastrar resposta de exame\n'))
-    #Inicio do Menu
+    option = int(input('Ola, o que desejas fazer?\n 0.Login\n 1.Cadastrar-se\n 2.Sair\n'))
+    ###cadstro no sistema 
     if option == 1:
-        request = requests.get('http://localhost:8000/scheduling/')
-        dados = request.json()
-        i = 0
-        print('Dados dos pacientes com consultas realizadas\n')
-        
-        for i in range(len(dados)):
-            print('Nome: {}'.format(dados[i]['name']) )
-            print('CPF: {}'.format(dados[i]['cpf']) )
-            print('Data da consulta: {}'.format(dados[i]['date']) )
-            print('Status Exames: {}'.format(dados[i]['exam']) )
-            print('\n') 
-        print('\n')    
-        option = 7
-
-    
-    if option == 2:
-        print('saindo')
-        print('-------------------')
-        
-
-    if option == 3:
-        request = requests.get('http://localhost:8000/scheduling/')
-        dados = request.json()
-        i = 0
-        print('inciando consulta de resultado por CPF')
-        print('-------------------')
-        consultaCpf = int(input('digite o CPF para consulta:  '))
-        
-        for consultaCpf in dados:
-            print(dados.value()) 
-    
-    if option == 4:
         inputNameUser = input('Digite seu nome completo: \n')
         inputCategoryUser = int(input('Digite o número correspondente à sua categoria:\n 11.paciente\n 22.medico\n'))
         inputpasswordUser = getpass.getpass(prompt='Digite sua Senha: ', stream=None)
@@ -73,19 +41,73 @@ def main():
         response = requests.post(url=url,json=dados)
 
         if response.status_code >= 200 and response.status_code <=299:
-            #sucesso em cadastrar usuario
-            print('Status Code', response.status_code)
-            print('Cadastro criado com sucesso!')
-            #print('Reason', response.reason)
-            #print('Texto',response.text)
-            #print('Json',response.json())
+            #sucesso em cadastrar usuario!
+            #print('Status Code', response.status_code)
+            print('########################################')
+            print('#SEU CADASTRO FOI REALIZADO COM SUCESSO#')
+            print('#    CONTINUE A USAR O SISTEMA!!!      #')
+            print('########################################')
+            option = 7
+            
+        
+        #caso nao tenha dado certo fazer o cadastro
         else:
             #Erros
             print('Status Code', response.status_code)
             print('Reason', response.reason)
             print('Texto',response.text)
+            option = 7
         
+    
+    
+    ###sair do sistema
+    if option == 2:
+        print('saindo')
+        print('-------------------')
+        
+    ###Login
+    if option == 0:
+        request = requests.get('http://localhost:8000/scheduling/')
+        dados = request.json()
+        print('Bem vindo ao SISCOVID')
+        consultaNome = input('digite seu nome:  ')
+        consultaSenha = getpass.getpass(prompt='Digite sua Senha: ', stream=None)
+        i= 0
+        for d  in dados:
+            if dados[i]['name'] == consultaNome:
+                if dados[i]['password'] == consultaSenha:
+                    if dados[i]['categoryUser'] == 'paciente':
+                        option = 8
+                    elif dados[i]['categoryUser'] == 'medico':
+                        option = 9
+            else:
+                i+=1
+        
+
+    
+    if option == 4:
+        request = requests.get('http://localhost:8000/scheduling/')
+        dados = request.json()
+        i = 0
+        print('Dados dos pacientes com consultas realizadas\n')
+        
+        for i in range(len(dados)):
+            print('Nome: {}'.format(dados[i]['name']) )
+            print('CPF: {}'.format(dados[i]['cpf']) )
+            print('Data da consulta: {}'.format(dados[i]['date']) )
+            print('Status Exames: {}'.format(dados[i]['exam']) )
+            print('\n') 
+        print('\n')    
         option = 7
+
+    if option == 8:
+        print('Ola paciente\n')
+    
+    if option == 9:
+        print('Ola medico\n')
+        
+       
+        
 
 
 
@@ -95,3 +117,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
