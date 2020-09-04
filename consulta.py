@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 import requests
 import json
+import getpass 
+
 
 print('########################################')
 print('#   PAINEL DE CONTROLE PARA O MEDICO   #')
@@ -45,22 +48,37 @@ def main():
             print(dados.value()) 
     
     if option == 4:
+        inputNameUser = input('Digite seu nome completo: \n')
+        inputCategoryUser = int(input('Digite o número correspondente à sua categoria:\n 11.paciente\n 22.medico\n'))
+        inputpasswordUser = getpass.getpass(prompt='Digite sua Senha: ', stream=None)
+        inputCpfUser = int(input('Digite seu cpf, só os numeros: \n'))
+        print(inputCategoryUser)
+        if  inputCategoryUser == 11:
+            inputDateUser = input('Digite a data para a consulta no formato dd/mm/aaaa: \n')
+            inputCategoryUser ='paciente'
+        else:
+            inputDateUser ='00/00/0000'
+            inputCategoryUser ='medico'
+        
         dados = {
-            "name": "Joao Claudio",
-            "cpf": "001548745899",
-            "date": "02/02/2020",
+            "name": inputNameUser,
+            "categoryUser": inputCategoryUser,
+            "password": inputpasswordUser,
+            "cpf": inputCpfUser,
+            "date":inputDateUser ,
             "description": ""
         }
-        url = 'http://localhost:8000/scheduling/create/'
-
-        response = requests.post(url=url,json=dados)
         
+        url = 'http://localhost:8000/scheduling/create/'
+        response = requests.post(url=url,json=dados)
+
         if response.status_code >= 200 and response.status_code <=299:
             #sucesso em cadastrar usuario
             print('Status Code', response.status_code)
-            print('Reason', response.reason)
-            print('Texto',response.text)
-            print('Json',response.json())
+            print('Cadastro criado com sucesso!')
+            #print('Reason', response.reason)
+            #print('Texto',response.text)
+            #print('Json',response.json())
         else:
             #Erros
             print('Status Code', response.status_code)
